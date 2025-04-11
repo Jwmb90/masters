@@ -81,7 +81,7 @@
     #addPlayerForm button:hover {
       background-color: #00341e;
     }
-    /* Responsive Layout Container */
+    /* Responsive Layout */
     .container {
       display: flex;
       flex-wrap: wrap;
@@ -123,8 +123,7 @@
     table tbody tr:nth-child(even) {
       background-color: #1e3933;
     }
-    /* Highlight rule for Full Masters row:
-       Light green background with dark green text */
+    /* Highlight rule for Full Masters row: light green background with dark green text */
     #full-body tr.highlight {
       background-color: #8BC34A !important;
       color: #004225 !important;
@@ -175,6 +174,9 @@
     }
     /* Mobile Adjustments */
     @media (max-width: 768px) {
+      body {
+        width: fit-content;
+      }
       .container {
         flex-direction: column;
       }
@@ -202,11 +204,11 @@
     function highlightInMasters(golferName) {
       console.log("Clicked golfer:", golferName);
       const clickedName = golferName.trim().toLowerCase();
-      // Remove any existing highlights
+      // Remove existing highlights
       document.querySelectorAll("#full-body tr").forEach(function(row) {
         row.classList.remove("highlight");
       });
-      // Loop through each row and add highlight if the first cell matches
+      // Loop through each row to check if it matches
       document.querySelectorAll("#full-body tr").forEach(function(row) {
         const cell = row.cells[0];
         if (cell) {
@@ -218,7 +220,8 @@
         }
       });
     }
-    // Function to update the Player Scoreboard and attach click events to golfer links
+    
+    // Function to update the Player Scoreboard and attach event listeners
     async function updateCompetition() {
       try {
         const response = await fetch('/api/competition');
@@ -241,7 +244,7 @@
           row += "</tr>";
           tbody.innerHTML += row;
         });
-        // Attach event listeners to each golfer link
+        // Attach click event to each golfer link
         document.querySelectorAll(".golfer-link").forEach(function(link) {
           link.addEventListener("click", function(e) {
             e.preventDefault();
@@ -253,6 +256,7 @@
         console.error("Error fetching player data:", error);
       }
     }
+    
     // Function to update the Full Masters Scoreboard
     async function updateFull() {
       try {
@@ -272,10 +276,12 @@
         console.error("Error fetching full scoreboard data:", error);
       }
     }
+    
     function toggleAddPlayerForm() {
       var formDiv = document.getElementById("addPlayerForm");
       formDiv.style.display = (formDiv.style.display === "none" || formDiv.style.display === "") ? "block" : "none";
     }
+    
     document.addEventListener('DOMContentLoaded', function() {
       updateCompetition();
       updateFull();
