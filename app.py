@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_migrate import Migrate  # Ensure this is imported
 from datetime import datetime, timedelta
 import time
 from scraper import get_leaderboard_mapping_cached, force_refresh_leaderboard, CACHE_DURATION
@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
 
-# Expose timedelta to Jinja templates for adjusting time to UTC+1
+# Expose timedelta to Jinja templates for UTC+1 time adjustment
 app.jinja_env.globals['timedelta'] = timedelta
 
 # ----------------------
@@ -57,33 +57,26 @@ def update_master_scores(scraped, now=None):
         new_thru = entry.get("thru", "N/A")
         record = MasterScore.query.filter_by(golfer=golfer).first()
         if record:
-            # Log change if any field differs
             if record.current_score != new_score or record.today != new_today or record.thru != new_thru:
-                history = MasterScoreHistory(
-                    master_score_id=record.id,
-                    score=record.current_score,
-                    timestamp=record.last_updated
-                )
+                history = MasterScoreHistory(master_score_id=record.id,
+                                             score=record.current_score,
+                                             timestamp=record.last_updated)
                 db.session.add(history)
             record.current_score = new_score
             record.today = new_today
             record.thru = new_thru
             record.last_updated = now
         else:
-            new_record = MasterScore(
-                golfer=golfer,
-                current_score=new_score,
-                today=new_today,
-                thru=new_thru,
-                last_updated=now
-            )
+            new_record = MasterScore(golfer=golfer, current_score=new_score,
+                                     today=new_today, thru=new_thru,
+                                     last_updated=now)
             db.session.add(new_record)
     db.session.commit()
 
 def generate_scoreboard():
     """
-    Generate a competition scoreboard by looking up each competitor's selected golfers'
-    overall scores from the cached leaderboard data. Returns a sorted list of dictionaries.
+    For each competitor, look up their selected golfers' scores using cached data.
+    Returns a sorted list of dictionaries for the competition scoreboard.
     """
     leaderboard_mapping = get_leaderboard_mapping_cached()  # {golfer: {"score":..., "today":..., "thru":...}, ...}
     scoreboard = []
@@ -93,7 +86,6 @@ def generate_scoreboard():
         scores = {}
         total_score_num = 0
         for golfer in golfers:
-            # Use overall score only for competition scoreboard
             score_str = leaderboard_mapping.get(golfer, {}).get("score", "N/A")
             try:
                 score_val = int(score_str)
@@ -206,8 +198,8 @@ def api_full():
     full = get_full_masters_scoreboard()
     result = []
     for entry in full:
-        # Adjust last_updated to UTC+1 and format to show only the time.
         adjusted_time = entry.last_updated + timedelta(hours=1)
+        # Format adjusted_time to show only time
         result.append({
             "golfer": entry.golfer,
             "current_score": entry.current_score,
