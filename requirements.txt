@@ -1,0 +1,5 @@
+Flask
+Flask-SQLAlchemy
+selenium
+beautifulsoup4
+gunicorn
