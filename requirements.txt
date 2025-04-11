@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 selenium
 beautifulsoup4
 gunicorn
+Flask-Migrate
