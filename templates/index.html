@@ -13,25 +13,21 @@
       margin: 0;
       padding: 0;
     }
-    
     body {
       font-family: 'Open Sans', sans-serif;
       background: #0D1B17;
       color: #FFFFFF;
       padding: 20px;
     }
-    
     h1, h2 {
       text-align: center;
       margin-bottom: 20px;
     }
-    
     /* Header Buttons */
     .header-buttons {
       text-align: center;
       margin-bottom: 20px;
     }
-    
     .header-buttons button {
       background-color: #004225;
       color: #DAA520;
@@ -43,11 +39,9 @@
       border-radius: 4px;
       transition: background-color 0.3s ease;
     }
-    
     .header-buttons button:hover {
       background-color: #00341e;
     }
-    
     /* Add Player Form */
     #addPlayerForm {
       background-color: #1E2C26;
@@ -56,16 +50,13 @@
       margin-bottom: 30px;
       border-radius: 6px;
       max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto 30px;
     }
-    
     #addPlayerForm label {
       display: block;
       margin-bottom: 10px;
       font-weight: 600;
     }
-    
     #addPlayerForm input[type="text"],
     #addPlayerForm select {
       width: 100%;
@@ -76,7 +67,6 @@
       background-color: #0D1B17;
       color: #fff;
     }
-    
     #addPlayerForm button {
       background-color: #004225;
       color: #DAA520;
@@ -88,91 +78,88 @@
       transition: background-color 0.3s ease;
       margin-top: 10px;
     }
-    
     #addPlayerForm button:hover {
       background-color: #00341e;
     }
-    
-    /* Responsive Layout */
+    /* Responsive Layout Container */
     .container {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
       justify-content: center;
     }
-    
-    /* Desktop layout: two columns with backgrounds that fit content */
+    /* Columns with content-fitted backgrounds */
     .column {
       background-color: #1E2C26;
       padding: 20px;
       border: 1px solid #004225;
       border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
       margin-bottom: 20px;
     }
-    
-    /* Desktop proportions */
     .column.player {
       flex: 2 1 0;
     }
-    
     .column.full {
       flex: 1 1 0;
     }
-    
     /* Table Styling */
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
-    
     table thead tr {
       background-color: #004225;
     }
-    
     table th, table td {
       padding: 10px;
       text-align: center;
       border: 1px solid #004225;
-      font-size: 0.9em;
     }
-    
     table tbody tr:nth-child(odd) {
       background-color: #16302b;
     }
-    
     table tbody tr:nth-child(even) {
       background-color: #1e3933;
     }
-    
+    /* Highlight rule for Full Masters row:
+       Light green background with dark green text */
+    #full-body tr.highlight {
+      background-color: #8BC34A !important;
+      color: #004225 !important;
+    }
     /* Typography */
     .player-name {
-      font-size: 1.2em;
+      font-size: 1.3em;
       font-weight: 700;
     }
-    
     .combined-score {
-      font-size: 1.2em;
+      font-size: 1.3em;
       font-weight: 700;
     }
-    
+    /* Golfer link style */
+    .golfer-link {
+      color: #DAA520;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .golfer-link:hover {
+      text-decoration: underline;
+    }
     /* Action Links */
-    a {
+    a.action-link {
       color: #DAA520;
       text-decoration: none;
       font-weight: 600;
       margin-right: 5px;
     }
-    
-    a:hover {
+    a.action-link:hover {
       text-decoration: underline;
     }
-    
     form {
       display: inline;
     }
-    
     form button {
       background-color: #004225;
       color: #DAA520;
@@ -183,49 +170,55 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    
     form button:hover {
       background-color: #00341e;
     }
-    
     /* Mobile Adjustments */
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
       }
-
-      body {
-      font-family: 'Open Sans', sans-serif;
-      background: #0D1B17;
-      color: #FFFFFF;
-      padding: 20px;
-      width:fit-content
-     }
-      
       .column {
         width: 100%;
-        padding: 10px; /* Reduced padding */
+        padding: 10px;
       }
-      
       table th, table td {
         padding: 8px;
-        font-size: 0.7em;  /* Slightly reduced font size */
+        font-size: 0.8em;
       }
-      
       h1 {
         font-size: 1.8em;
       }
-      
       h2 {
         font-size: 1.4em;
       }
-      
       .player-name, .combined-score {
         font-size: 1em;
       }
     }
   </style>
   <script>
+    // Function to highlight the matching row in the Full Masters Scoreboard
+    function highlightInMasters(golferName) {
+      console.log("Clicked golfer:", golferName);
+      const clickedName = golferName.trim().toLowerCase();
+      // Remove any existing highlights
+      document.querySelectorAll("#full-body tr").forEach(function(row) {
+        row.classList.remove("highlight");
+      });
+      // Loop through each row and add highlight if the first cell matches
+      document.querySelectorAll("#full-body tr").forEach(function(row) {
+        const cell = row.cells[0];
+        if (cell) {
+          const cellText = cell.innerText.trim().toLowerCase();
+          console.log("Comparing clicked:", clickedName, "with row value:", cellText);
+          if (cellText === clickedName) {
+            row.classList.add("highlight");
+          }
+        }
+      });
+    }
+    // Function to update the Player Scoreboard and attach click events to golfer links
     async function updateCompetition() {
       try {
         const response = await fetch('/api/competition');
@@ -235,11 +228,12 @@
         data.forEach(function(player) {
           let row = "<tr><td class='player-name'>" + player.competitor + "</td>";
           player.golfers.forEach(function(golfer) {
-            row += "<td>" + golfer + " (" + player.scores[golfer] + ")</td>";
+            const score = player.scores[golfer] || "N/A";
+            row += `<td><a href="#" class="golfer-link" data-golfer="${golfer}">${golfer} (${score})</a></td>`;
           });
           row += "<td class='combined-score'>" + player.total + "</td>";
           row += `<td>
-                     <a href="/edit-competitor/${player.id}">Edit</a>
+                     <a href="/edit-competitor/${player.id}" class="action-link">Edit</a>
                      <form action="/delete-competitor/${player.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
                         <button type="submit">Delete</button>
                      </form>
@@ -247,11 +241,19 @@
           row += "</tr>";
           tbody.innerHTML += row;
         });
+        // Attach event listeners to each golfer link
+        document.querySelectorAll(".golfer-link").forEach(function(link) {
+          link.addEventListener("click", function(e) {
+            e.preventDefault();
+            const golferName = this.getAttribute("data-golfer");
+            highlightInMasters(golferName);
+          });
+        });
       } catch (error) {
         console.error("Error fetching player data:", error);
       }
     }
-    
+    // Function to update the Full Masters Scoreboard
     async function updateFull() {
       try {
         const response = await fetch('/api/full');
@@ -270,12 +272,10 @@
         console.error("Error fetching full scoreboard data:", error);
       }
     }
-    
     function toggleAddPlayerForm() {
       var formDiv = document.getElementById("addPlayerForm");
       formDiv.style.display = (formDiv.style.display === "none" || formDiv.style.display === "") ? "block" : "none";
     }
-    
     document.addEventListener('DOMContentLoaded', function() {
       updateCompetition();
       updateFull();
@@ -349,12 +349,24 @@
           {% for player in competition_scoreboard %}
             <tr>
               <td class="player-name">{{ player.competitor }}</td>
-              <td>{{ player.golfers[0] }} ({{ player.scores[player.golfers[0]] }})</td>
-              <td>{{ player.golfers[1] }} ({{ player.scores[player.golfers[1]] }})</td>
-              <td>{{ player.golfers[2] }} ({{ player.scores[player.golfers[2]] }})</td>
+              <td>
+                <a href="#" class="golfer-link" data-golfer="{{ player.golfers[0] }}">
+                  {{ player.golfers[0] }} ({{ player.scores[player.golfers[0]] }})
+                </a>
+              </td>
+              <td>
+                <a href="#" class="golfer-link" data-golfer="{{ player.golfers[1] }}">
+                  {{ player.golfers[1] }} ({{ player.scores[player.golfers[1]] }})
+                </a>
+              </td>
+              <td>
+                <a href="#" class="golfer-link" data-golfer="{{ player.golfers[2] }}">
+                  {{ player.golfers[2] }} ({{ player.scores[player.golfers[2]] }})
+                </a>
+              </td>
               <td class="combined-score">{{ player.total }}</td>
               <td>
-                <a href="/edit-competitor/{{ player.id }}">Edit</a>
+                <a href="/edit-competitor/{{ player.id }}" class="action-link">Edit</a>
                 <form action="{{ url_for('delete_competitor', competitor_id=player.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
                   <button type="submit">Delete</button>
                 </form>
@@ -383,7 +395,7 @@
               <td>{{ entry.current_score }}</td>
               <td>{{ entry.today }}</td>
               <td>{{ entry.thru }}</td>
-              <td>{{ (entry.last_updated + timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S") }}</td>
+              <td>{{ (entry.last_updated + timedelta(hours=1)).strftime("%H:%M:%S") }}</td>
             </tr>
           {% endfor %}
         </tbody>
