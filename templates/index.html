@@ -200,28 +200,33 @@
     }
   </style>
   <script>
-    // Function to highlight the matching row in the Full Masters Scoreboard
+    // Function to highlight the matching row in the Full Masters Scoreboard and scroll it into center view
     function highlightInMasters(golferName) {
       console.log("Clicked golfer:", golferName);
       const clickedName = golferName.trim().toLowerCase();
-      // Remove existing highlights
-      document.querySelectorAll("#full-body tr").forEach(function(row) {
+      
+      // Remove any existing highlights
+      const masterRows = document.querySelectorAll("#full-body tr");
+      masterRows.forEach(function(row) {
         row.classList.remove("highlight");
       });
-      // Loop through each row to check if it matches
-      document.querySelectorAll("#full-body tr").forEach(function(row) {
-        const cell = row.cells[0];
+      
+      // Loop through each row to find a match and add highlight
+      masterRows.forEach(function(row) {
+        const cell = row.cells[0]; // Assuming first cell contains golfer's name
         if (cell) {
           const cellText = cell.innerText.trim().toLowerCase();
           console.log("Comparing clicked:", clickedName, "with row value:", cellText);
           if (cellText === clickedName) {
             row.classList.add("highlight");
+            // Smooth scroll the row into view, centered vertically
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         }
       });
     }
     
-    // Function to update the Player Scoreboard and attach event listeners
+    // Function to update the Player Scoreboard and attach click events to golfer links
     async function updateCompetition() {
       try {
         const response = await fetch('/api/competition');
@@ -230,6 +235,7 @@
         tbody.innerHTML = "";
         data.forEach(function(player) {
           let row = "<tr><td class='player-name'>" + player.competitor + "</td>";
+          // Create clickable links for each golfer
           player.golfers.forEach(function(golfer) {
             const score = player.scores[golfer] || "N/A";
             row += `<td><a href="#" class="golfer-link" data-golfer="${golfer}">${golfer} (${score})</a></td>`;
@@ -244,7 +250,7 @@
           row += "</tr>";
           tbody.innerHTML += row;
         });
-        // Attach click event to each golfer link
+        // Attach click event listeners to each golfer link
         document.querySelectorAll(".golfer-link").forEach(function(link) {
           link.addEventListener("click", function(e) {
             e.preventDefault();
