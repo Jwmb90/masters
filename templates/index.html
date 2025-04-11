@@ -14,25 +14,21 @@
       margin: 0;
       padding: 0;
     }
-    
     body {
       font-family: 'Open Sans', sans-serif;
       background: #0D1B17;
       color: #FFFFFF;
       padding: 20px;
     }
-    
     h1, h2 {
       text-align: center;
       margin-bottom: 20px;
     }
-    
     /* Header Buttons */
     .header-buttons {
       text-align: center;
       margin-bottom: 20px;
     }
-    
     .header-buttons button {
       background-color: #004225;
       color: #DAA520;
@@ -44,11 +40,9 @@
       border-radius: 4px;
       transition: background-color 0.3s ease;
     }
-    
     .header-buttons button:hover {
       background-color: #00341e;
     }
-    
     /* Add Player Form */
     #addPlayerForm {
       background-color: #1E2C26;
@@ -59,13 +53,11 @@
       max-width: 500px;
       margin: 0 auto 30px;
     }
-    
     #addPlayerForm label {
       display: block;
       margin-bottom: 10px;
       font-weight: 600;
     }
-    
     #addPlayerForm input[type="text"],
     #addPlayerForm select {
       width: 100%;
@@ -76,7 +68,6 @@
       background-color: #0D1B17;
       color: #fff;
     }
-    
     #addPlayerForm button {
       background-color: #004225;
       color: #DAA520;
@@ -88,11 +79,9 @@
       transition: background-color 0.3s ease;
       margin-top: 10px;
     }
-    
     #addPlayerForm button:hover {
       background-color: #00341e;
     }
-    
     /* Responsive Layout Container */
     .container {
       display: flex;
@@ -100,13 +89,11 @@
       gap: 20px;
       justify-content: center;
     }
-    
-    /* Wrapper to enforce table responsiveness */
+    /* Wrapper for responsive table scrolling */
     .table-wrapper {
       overflow-x: auto;
       width: 100%;
     }
-    
     /* Columns with content-fitted backgrounds */
     .column {
       background-color: #1E2C26;
@@ -116,15 +103,12 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.6);
       margin-bottom: 20px;
     }
-    
     .column.player {
       flex: 2 1 0;
     }
-    
     .column.full {
       flex: 1 1 0;
     }
-    
     /* Table Styling */
     table {
       width: 100%;
@@ -132,53 +116,43 @@
       border-collapse: collapse;
       margin-top: 10px;
     }
-    
     table thead tr {
       background-color: #004225;
     }
-    
     table th, table td {
       padding: 10px;
       text-align: center;
       border: 1px solid #004225;
     }
-    
     table tbody tr:nth-child(odd) {
       background-color: #16302b;
     }
-    
     table tbody tr:nth-child(even) {
       background-color: #1e3933;
     }
-    
-    /* Highlight rule for Full Masters row: light green background with dark green text */
+    /* Highlight rule for Full Masters row: light green with dark green text */
     #full-body tr.highlight {
       background-color: #8BC34A !important;
       color: #004225 !important;
     }
-    
     /* Typography */
     .player-name {
       font-size: 1.3em;
       font-weight: 700;
     }
-    
     .combined-score {
       font-size: 1.3em;
       font-weight: 700;
     }
-    
     /* Golfer link style */
     .golfer-link {
       color: #DAA520;
       text-decoration: none;
       cursor: pointer;
     }
-    
     .golfer-link:hover {
       text-decoration: underline;
     }
-    
     /* Action Links */
     a.action-link {
       color: #DAA520;
@@ -186,15 +160,12 @@
       font-weight: 600;
       margin-right: 5px;
     }
-    
     a.action-link:hover {
       text-decoration: underline;
     }
-    
     form {
       display: inline;
     }
-    
     form button {
       background-color: #004225;
       color: #DAA520;
@@ -205,14 +176,11 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    
     form button:hover {
       background-color: #00341e;
     }
-    
     /* Mobile Adjustments */
     @media (max-width: 768px) {
-      
       .container {
         flex-direction: column;
       }
@@ -223,10 +191,12 @@
       .table-wrapper {
         width: 100%;
       }
-      table th, table td {
+      /* Reduce table font size for player table by 0.1em */
+      .column.player table th, .column.player table td {
         padding: 8px;
-        font-size: 0.8em;
+        font-size: 0.7em; /* Was 0.8em, now reduced by 0.1em */
       }
+      /* Optionally, adjust headings and text as needed */
       h1 {
         font-size: 1.8em;
       }
@@ -239,30 +209,31 @@
     }
   </style>
   <script>
-    // Function to highlight the matching row in the Full Masters Scoreboard and scroll it into view
+    // Function to highlight and scroll the matching row in the Full Masters Scoreboard
     function highlightInMasters(golferName) {
       console.log("Clicked golfer:", golferName);
       const clickedName = golferName.trim().toLowerCase();
-      // Remove current highlights
       const masterRows = document.querySelectorAll("#full-body tr");
+      
       masterRows.forEach(function(row) {
         row.classList.remove("highlight");
       });
-      // Loop through each row and add highlight if the first cell matches
+      
       masterRows.forEach(function(row) {
-        const cell = row.cells[0]; // First <td> contains golfer's name
+        const cell = row.cells[0];
         if (cell) {
           const cellText = cell.innerText.trim().toLowerCase();
           console.log("Comparing clicked:", clickedName, "with row value:", cellText);
           if (cellText === clickedName) {
             row.classList.add("highlight");
+            // Scroll the highlighted row into the center of the view
             row.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         }
       });
     }
     
-    // Function to update the Player Scoreboard and attach event listeners to golfer links
+    // Update the Player Scoreboard and attach click events to golfer links
     async function updateCompetition() {
       try {
         const response = await fetch('/api/competition');
@@ -271,7 +242,6 @@
         tbody.innerHTML = "";
         data.forEach(function(player) {
           let row = "<tr><td class='player-name'>" + player.competitor + "</td>";
-          // Create clickable links for each golfer
           player.golfers.forEach(function(golfer) {
             const score = player.scores[golfer] || "N/A";
             row += `<td><a href="#" class="golfer-link" data-golfer="${golfer}">${golfer} (${score})</a></td>`;
@@ -286,7 +256,6 @@
           row += "</tr>";
           tbody.innerHTML += row;
         });
-        // Attach event listeners to each golfer link
         document.querySelectorAll(".golfer-link").forEach(function(link) {
           link.addEventListener("click", function(e) {
             e.preventDefault();
@@ -299,7 +268,7 @@
       }
     }
     
-    // Function to update the Full Masters Scoreboard
+    // Update the Full Masters Scoreboard
     async function updateFull() {
       try {
         const response = await fetch('/api/full');
