@@ -135,6 +135,16 @@
       background-color: #8BC34A !important;
       color: #004225 !important;
     }
+    /* New style for rows with a CUT score: grey background and white text */
+    .cut {
+      background-color: grey !important;
+      color: #FFFFFF !important;
+    }
+    /* Override link color for golfers in cut rows so they appear white */
+    tr.cut a.golfer-link {
+      color: #FFFFFF !important;
+      text-decoration: none !important;
+    }
     /* Typography */
     .player-name {
       font-size: 1.3em;
@@ -199,15 +209,13 @@
       .player-name, .combined-score {
         font-size: 1em !important;
       }
-      /* Reduce table font size for player table by 0.1em */
-      .column.player table th{
+      .column.player table th {
         padding: 8px;
         font-size: 1em; 
       }
-      
       .column.player table td {
         padding: 12px 8px 12px 8px;
-        font-size: 0.8em; /* Reduced from 0.8em */
+        font-size: 0.8em;
       }
       h1 {
         font-size: 1.8em;
@@ -215,7 +223,6 @@
       h2 {
         font-size: 1.4em;
       }
-      
     }
   </style>
   <script>
@@ -237,7 +244,6 @@
     
     // Function to highlight the matching row in the Full Masters Scoreboard and scroll it into view
     function highlightInMasters(golferName) {
-      console.log("Clicked golfer:", golferName);
       const clickedName = golferName.trim().toLowerCase();
       const masterRows = document.querySelectorAll("#full-body tr");
       
@@ -249,7 +255,6 @@
         const cell = row.cells[0]; // Assume first cell holds the golfer's name
         if (cell) {
           const cellText = cell.innerText.trim().toLowerCase();
-          console.log("Comparing clicked:", clickedName, "with row value:", cellText);
           if (cellText === clickedName) {
             row.classList.add("highlight");
             row.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -263,16 +268,33 @@
       try {
         const response = await fetch('/api/competition');
         const data = await response.json();
+
+        // Helper function to check if a player's scores contain "CUT"
+        function hasCut(player) {
+          return Object.values(player.scores).some(score => score === "CUT");
+        }
+        
+        // Sort players: those with a "CUT" are placed at the bottom
+        data.sort(function(a, b) {
+          return (hasCut(a) === hasCut(b)) ? 0 : (hasCut(a) ? 1 : -1);
+        });
+
         const tbody = document.getElementById("competition-body");
         tbody.innerHTML = "";
         data.forEach(function(player) {
-          let row = "<tr><td class='player-name'>" + player.competitor + "</td>";
+          // If any golfer's score is "CUT", mark the row with the "cut" class
+          const isCut = hasCut(player);
+          let row = `<tr${isCut ? ' class="cut"' : ''}>`;
+          row += `<td class="player-name">${player.competitor}`;
+          if (isCut) {
+            row += ' ☠';
+          }
+          row += `</td>`;
           player.golfers.forEach(function(golfer) {
             const score = player.scores[golfer] || "N/A";
             row += `<td><a href="#" class="golfer-link" data-golfer="${golfer}">${golfer} (${score})</a></td>`;
           });
           row += "<td class='combined-score'>" + player.total + "</td>";
-          // The Actions column is hidden initially; add a class and style
           row += `<td class="actions-column" style="display: none;">
                      <a href="/edit-competitor/${player.id}" class="action-link">Edit</a>
                      <form action="/delete-competitor/${player.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
@@ -282,7 +304,7 @@
           row += "</tr>";
           tbody.innerHTML += row;
         });
-        // Attach click events
+        // Attach click events to golfer links
         document.querySelectorAll(".golfer-link").forEach(function(link) {
           link.addEventListener("click", function(e) {
             e.preventDefault();
@@ -393,8 +415,10 @@
           </thead>
           <tbody id="competition-body">
             {% for player in competition_scoreboard %}
-              <tr>
-                <td class="player-name">{{ player.competitor }}</td>
+              <tr{% if "CUT" in player.scores.values() %} class="cut"{% endif %}>
+                <td class="player-name">
+                  {{ player.competitor }}{% if "CUT" in player.scores.values() %} ☠{% endif %}
+                </td>
                 <td>
                   <a href="#" class="golfer-link" data-golfer="{{ player.golfers[0] }}">
                     {{ player.golfers[0] }} ({{ player.scores[player.golfers[0]] }})
