@@ -13,7 +13,7 @@ def get_leaderboard_data():
     Returns a list of dictionaries with keys: 'player', 'score', 'today', and 'thru'.
     If an error occurs, returns an empty list.
     """
-    url = "https://www.espn.com/golf/leaderboard"
+    url = "https://www.espn.com/golf/leaderboard/_/tournamentId/401703515"
     
     headers = {
         "User-Agent": (
