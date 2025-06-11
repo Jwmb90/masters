@@ -230,8 +230,8 @@
       });
     }
     
-    // Function to highlight the matching row in the Full Masters Scoreboard and scroll it into view
-    function highlightInMasters(golferName) {
+    // Function to highlight the matching row in the Full  Scoreboard and scroll it into view
+    function highlightIn(golferName) {
       const clickedName = golferName.trim().toLowerCase();
       const masterRows = document.querySelectorAll("#full-body tr");
       
@@ -297,7 +297,7 @@
           link.addEventListener("click", function(e) {
             e.preventDefault();
             const golferName = this.getAttribute("data-golfer");
-            highlightInMasters(golferName);
+            highlightIn(golferName);
           });
         });
       } catch (error) {
@@ -305,7 +305,7 @@
       }
     }
     
-    // Function to update the Full Masters Scoreboard
+    // Function to update the Full  Scoreboard
     async function updateFull() {
       try {
         const response = await fetch('/api/full');
@@ -436,7 +436,7 @@
       </div>
     </div>
     <div class="column full">
-      <h2>Full Masters Scoreboard</h2>
+      <h2>US OPEN Scoreboard</h2>
       <div class="table-wrapper">
         <table>
           <thead>
