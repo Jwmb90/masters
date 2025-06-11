@@ -8,223 +8,205 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Global Styles */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+  /* U.S. Open (USGA) Brand Colors */
+  :root {
+    --usga-blue:    #00365F; /* RGB 0,54,95 – USGA Blue Pantone 2955 C */ 
+    --usga-red:     #DA1A31; /* RGB 218,26,49 – USGA Red Pantone 186 C */ 
+    --usga-white:   #FFFFFF;
+    --usga-light:   #F2F2F2;
+    --usga-dark:    #333333;
+  }
+
+  /* Global Reset */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--usga-white);
+    color: var(--usga-dark);
+    padding: 20px;
+  }
+  h1, h2 {
+    text-align: center;
+    color: var(--usga-blue);
+    margin-bottom: 20px;
+  }
+
+  /* Header Buttons */
+  .header-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .header-buttons button {
+    background-color: var(--usga-blue);
+    color: var(--usga-white);
+    border: 2px solid var(--usga-red);
+    padding: 12px 20px;
+    font-size: 16px;
+    margin: 0 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  .header-buttons button:hover {
+    background-color: var(--usga-red);
+  }
+
+  /* Add Player Form */
+  #addPlayerForm {
+    background-color: var(--usga-light);
+    border: 1px solid var(--usga-blue);
+    padding: 20px;
+    margin: 0 auto 30px;
+    border-radius: 6px;
+    max-width: 500px;
+  }
+  #addPlayerForm label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--usga-blue);
+  }
+  #addPlayerForm input,
+  #addPlayerForm select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--usga-blue);
+    border-radius: 4px;
+    background: var(--usga-white);
+    color: var(--usga-dark);
+  }
+  #addPlayerForm button {
+    background-color: var(--usga-blue);
+    color: var(--usga-white);
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #addPlayerForm button:hover {
+    background-color: var(--usga-red);
+  }
+
+  /* Layout & Cards */
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  .column {
+    background-color: var(--usga-white);
+    border: 1px solid var(--usga-blue);
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  .column.player { flex: 2 1 0; }
+  .column.full   { flex: 1 1 0; }
+
+  /* Table Styling */
+  .table-wrapper { overflow-x: auto; width: 100%; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  table thead tr {
+    background-color: var(--usga-blue);
+  }
+  table th, table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--usga-blue);
+  }
+  table tbody tr:nth-child(odd) {
+    background-color: var(--usga-white);
+  }
+  table tbody tr:nth-child(even) {
+    background-color: var(--usga-light);
+  }
+  /* Highlight Full Masters row */
+  #full-body tr.highlight {
+    background-color: var(--usga-red) !important;
+    color: var(--usga-white) !important;
+  }
+  /* CUT rows */
+  .cut {
+    background-color: #CCCCCC !important;
+    color: var(--usga-dark) !important;
+  }
+  tr.cut a.golfer-link {
+    color: var(--usga-dark) !important;
+    text-decoration: none !important;
+  }
+
+  /* Links & Typography */
+  .player-name, .combined-score {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--usga-blue);
+  }
+  a.golfer-link {
+    color: var(--usga-red);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  a.golfer-link:hover {
+    text-decoration: underline;
+  }
+  a.action-link {
+    color: var(--usga-red);
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: 5px;
+  }
+  a.action-link:hover {
+    color: var(--usga-blue);
+    text-decoration: underline;
+  }
+  form { display: inline; }
+  form button {
+    background-color: var(--usga-blue);
+    color: var(--usga-white);
+    border: none;
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form button:hover {
+    background-color: var(--usga-red);
+  }
+
+  /* Hide the Actions column initially */
+  .actions-header,
+  .actions-column {
+    display: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { flex-direction: column; }
+    .column { width: 100%; padding: 10px; }
+    .player-name, .combined-score { font-size: 1em !important; }
+    .column.player table th { padding: 8px; font-size: 1em; }
+    .column.player table td {
+      padding: 12px 8px;
+      font-size: 0.8em;
     }
-    body {
-      font-family: 'Open Sans', sans-serif;
-      background: #0D1B17;
-      color: #FFFFFF;
-      padding: 20px;
-    }
-    h1, h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    /* Header Buttons */
-    .header-buttons {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .header-buttons button {
-      background-color: #004225;
-      color: #DAA520;
-      border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      margin: 0 10px;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
-    .header-buttons button:hover {
-      background-color: #00341e;
-    }
-    /* Add Player Form */
-    #addPlayerForm {
-      background-color: #1E2C26;
-      border: 1px solid #004225;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 6px;
-      max-width: 500px;
-      margin: 0 auto 30px;
-    }
-    #addPlayerForm label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-    #addPlayerForm input[type="text"],
-    #addPlayerForm select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #004225;
-      border-radius: 4px;
-      background-color: #0D1B17;
-      color: #fff;
-    }
-    #addPlayerForm button {
-      background-color: #004225;
-      color: #DAA520;
-      border: none;
-      padding: 10px 15px;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-top: 10px;
-    }
-    #addPlayerForm button:hover {
-      background-color: #00341e;
-    }
-    /* Responsive Layout Container */
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-    /* Wrapper for responsive table scrolling */
-    .table-wrapper {
-      overflow-x: auto;
-      width: 100%;
-    }
-    /* Columns with content-fitted backgrounds */
-    .column {
-      background-color: #1E2C26;
-      padding: 20px;
-      border: 1px solid #004225;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
-      margin-bottom: 20px;
-    }
-    .column.player {
-      flex: 2 1 0;
-    }
-    .column.full {
-      flex: 1 1 0;
-    }
-    /* Table Styling */
-    table {
-      width: 100%;
-      max-width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    table thead tr {
-      background-color: #004225;
-    }
-    table th, table td {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #004225;
-    }
-    table tbody tr:nth-child(odd) {
-      background-color: #16302b;
-    }
-    table tbody tr:nth-child(even) {
-      background-color: #1e3933;
-    }
-    /* Highlight rule for Full Masters row: light green background with dark green text */
-    #full-body tr.highlight {
-      background-color: #8BC34A !important;
-      color: #004225 !important;
-    }
-    /* New style for rows with a CUT score: grey background and white text */
-    .cut {
-      background-color: grey !important;
-      color: #FFFFFF !important;
-    }
-    /* Override link color for golfers in cut rows so they appear white */
-    tr.cut a.golfer-link {
-      color: #FFFFFF !important;
-      text-decoration: none !important;
-    }
-    /* Typography */
-    .player-name {
-      font-size: 1.3em;
-      font-weight: 700;
-    }
-    .combined-score {
-      font-size: 1.3em;
-      font-weight: 700;
-    }
-    /* Golfer link style */
-    .golfer-link {
-      color: #DAA520;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .golfer-link:hover {
-      text-decoration: underline;
-    }
-    /* Action Links */
-    a.action-link {
-      color: #DAA520;
-      text-decoration: none;
-      font-weight: 600;
-      margin-right: 5px;
-    }
-    a.action-link:hover {
-      text-decoration: underline;
-    }
-    form {
-      display: inline;
-    }
-    form button {
-      background-color: #004225;
-      color: #DAA520;
-      border: none;
-      padding: 6px 10px;
-      font-size: 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    form button:hover {
-      background-color: #00341e;
-    }
-    /* Hide the Actions column initially */
-    .actions-header,
-    .actions-column {
-      display: none;
-    }
-    /* Mobile Adjustments */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-      .column {
-        width: 100%;
-        padding: 10px;
-      }
-      .table-wrapper {
-        width: 100%;
-      }
-      .player-name, .combined-score {
-        font-size: 1em !important;
-      }
-      .column.player table th {
-        padding: 8px;
-        font-size: 1em; 
-      }
-      .column.player table td {
-        padding: 12px 8px 12px 8px;
-        font-size: 0.8em;
-      }
-      h1 {
-        font-size: 1.8em;
-      }
-      h2 {
-        font-size: 1.4em;
-      }
-    }
-  </style>
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.4em; }
+  }
+</style>
   <script>
     // Global state variable to track if actions column is visible
     let actionsVisible = false;
