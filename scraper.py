@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 # Caching variables
 _cached_mapping = None
 _last_scrape = 0
-CACHE_DURATION = 600  # 10 minutes
+CACHE_DURATION = 0  # 10 minutes
 
 def get_leaderboard_data():
     """
