@@ -8,329 +8,317 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-  /* U.S. Open (USGA) Brand Colors */
-  :root {
-    --usga-blue:    #00365F; /* RGB 0,54,95 – USGA Blue Pantone 2955 C */ 
-    --usga-red:     #DA1A31; /* RGB 218,26,49 – USGA Red Pantone 186 C */ 
-    --usga-white:   #FFFFFF;
-    --usga-light:   #F2F2F2;
-    --usga-dark:    #333333;
-  }
-
-  /* Global Reset */
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  body {
-    font-family: 'Open Sans', sans-serif;
-    background: var(--usga-white);
-    color: var(--usga-dark);
-    padding: 20px;
-  }
-
-  th {
-  font-family: 'Open Sans', sans-serif;
-  color: var(--usga-white);
-  }
-    
-  h1, h2 {
-    text-align: center;
-    color: var(--usga-blue);
-    margin-bottom: 20px;
-  }
-
-  /* Header Buttons */
-  .header-buttons {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .header-buttons button {
-    background-color: var(--usga-blue);
-    color: var(--usga-white);
-    border: 2px solid var(--usga-red);
-    padding: 12px 20px;
-    font-size: 16px;
-    margin: 0 10px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  .header-buttons button:hover {
-    background-color: var(--usga-red);
-  }
-
-  /* Add Player Form */
-  #addPlayerForm {
-    background-color: var(--usga-light);
-    border: 1px solid var(--usga-blue);
-    padding: 20px;
-    margin: 0 auto 30px;
-    border-radius: 6px;
-    max-width: 500px;
-  }
-  #addPlayerForm label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--usga-blue);
-  }
-  #addPlayerForm input,
-  #addPlayerForm select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid var(--usga-blue);
-    border-radius: 4px;
-    background: var(--usga-white);
-    color: var(--usga-dark);
-  }
-  #addPlayerForm button {
-    background-color: var(--usga-blue);
-    color: var(--usga-white);
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  #addPlayerForm button:hover {
-    background-color: var(--usga-red);
-  }
-
-  /* Layout & Cards */
-  .container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-  }
-  .column {
-    background-color: var(--usga-white);
-    border: 1px solid var(--usga-blue);
-    padding: 20px;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-  }
-  .column.player { flex: 2 1 0; }
-  .column.full   { flex: 1 1 0; }
-
-  /* Table Styling */
-  .table-wrapper { overflow-x: auto; width: 100%; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  table thead tr {
-    background-color: var(--usga-blue);
-  }
-  table th, table td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid var(--usga-blue);
-  }
-  table tbody tr:nth-child(odd) {
-    background-color: var(--usga-white);
-  }
-  table tbody tr:nth-child(even) {
-    background-color: var(--usga-light);
-  }
-  /* Highlight Full Masters row */
-  #full-body tr.highlight {
-    background-color: var(--usga-red) !important;
-    color: var(--usga-white) !important;
-  }
-  /* CUT rows */
-  .cut {
-    background-color: #CCCCCC !important;
-    color: var(--usga-dark) !important;
-  }
-  tr.cut a.golfer-link {
-    color: var(--usga-dark) !important;
-    text-decoration: none !important;
-  }
-
-  /* Links & Typography */
-  .player-name, .combined-score {
-    font-size: 1.3em;
-    font-weight: 700;
-    color: var(--usga-blue);
-  }
-  a.golfer-link {
-    color: var(--usga-red);
-    text-decoration: none;
-    cursor: pointer;
-  }
-  a.golfer-link:hover {
-    text-decoration: underline;
-  }
-  a.action-link {
-    color: var(--usga-red);
-    font-weight: 600;
-    text-decoration: none;
-    margin-right: 5px;
-  }
-  a.action-link:hover {
-    color: var(--usga-blue);
-    text-decoration: underline;
-  }
-  form { display: inline; }
-  form button {
-    background-color: var(--usga-blue);
-    color: var(--usga-white);
-    border: none;
-    padding: 6px 10px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  form button:hover {
-    background-color: var(--usga-red);
-  }
-
-  /* Hide the Actions column initially */
-  .actions-header,
-  .actions-column {
-    display: none;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .container { flex-direction: column; }
-    .column { width: 100%; padding: 10px; }
-    .player-name, .combined-score { font-size: 1em !important; }
-    .column.player table th { padding: 8px; font-size: 1em; }
-    .column.player table td {
-      padding: 12px 8px;
-      font-size: 0.8em;
+    /* U.S. Open (USGA) Brand Colors */
+    :root {
+      --usga-blue:    #00365F;
+      --usga-red:     #DA1A31;
+      --usga-white:   #FFFFFF;
+      --usga-light:   #F2F2F2;
+      --usga-dark:    #333333;
     }
-    h1 { font-size: 1.8em; }
-    h2 { font-size: 1.4em; }
-  }
-</style>
+
+    /* Global Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      /* Full-page background image */
+      background: url('/static/usopen-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--usga-dark);
+      padding: 20px;
+    }
+
+    /* Logo at the top */
+    .header-logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header-logo img {
+      max-width: 200px;
+      height: auto;
+      display: inline-block;
+    }
+
+    th {
+      font-family: 'Open Sans', sans-serif;
+      color: var(--usga-white);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: var(--usga-blue);
+      margin-bottom: 20px;
+    }
+
+    /* Header Buttons */
+    .header-buttons {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header-buttons button {
+      background-color: var(--usga-blue);
+      color: var(--usga-white);
+      border: 2px solid var(--usga-red);
+      padding: 12px 20px;
+      font-size: 16px;
+      margin: 0 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    .header-buttons button:hover {
+      background-color: var(--usga-red);
+    }
+
+    /* Add Player Form */
+    #addPlayerForm {
+      background-color: var(--usga-light);
+      border: 1px solid var(--usga-blue);
+      padding: 20px;
+      margin: 0 auto 30px;
+      border-radius: 6px;
+      max-width: 500px;
+    }
+    #addPlayerForm label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--usga-blue);
+    }
+    #addPlayerForm input,
+    #addPlayerForm select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid var(--usga-blue);
+      border-radius: 4px;
+      background: var(--usga-white);
+      color: var(--usga-dark);
+    }
+    #addPlayerForm button {
+      background-color: var(--usga-blue);
+      color: var(--usga-white);
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #addPlayerForm button:hover {
+      background-color: var(--usga-red);
+    }
+
+    /* Layout & Cards */
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .column {
+      background-color: var(--usga-white);
+      border: 1px solid var(--usga-blue);
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .column.player { flex: 2 1 0; }
+    .column.full   { flex: 1 1 0; }
+
+    /* Table Styling */
+    .table-wrapper { overflow-x: auto; width: 100%; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table thead tr {
+      background-color: var(--usga-blue);
+    }
+    table th, table td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid var(--usga-blue);
+    }
+    table tbody tr:nth-child(odd) {
+      background-color: var(--usga-white);
+    }
+    table tbody tr:nth-child(even) {
+      background-color: var(--usga-light);
+    }
+    /* Highlight Full US OPEN row */
+    #full-body tr.highlight {
+      background-color: var(--usga-red) !important;
+      color: var(--usga-white) !important;
+    }
+    /* CUT rows */
+    .cut {
+      background-color: #CCCCCC !important;
+      color: var(--usga-dark) !important;
+    }
+    tr.cut a.golfer-link {
+      color: var(--usga-dark) !important;
+      text-decoration: none !important;
+    }
+
+    /* Links & Typography */
+    .player-name, .combined-score {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: var(--usga-blue);
+    }
+    a.golfer-link {
+      color: var(--usga-red);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    a.golfer-link:hover {
+      text-decoration: underline;
+    }
+    a.action-link {
+      color: var(--usga-red);
+      font-weight: 600;
+      text-decoration: none;
+      margin-right: 5px;
+    }
+    a.action-link:hover {
+      color: var(--usga-blue);
+      text-decoration: underline;
+    }
+    form { display: inline; }
+    form button {
+      background-color: var(--usga-blue);
+      color: var(--usga-white);
+      border: none;
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    form button:hover {
+      background-color: var(--usga-red);
+    }
+
+    /* Hide the Actions column initially */
+    .actions-header,
+    .actions-column {
+      display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .column { width: 100%; padding: 10px; }
+      .player-name, .combined-score { font-size: 1em !important; }
+      .column.player table th { padding: 8px; font-size: 1em; }
+      .column.player table td {
+        padding: 12px 8px;
+        font-size: 0.8em;
+      }
+      h1 { font-size: 1.8em; }
+      h2 { font-size: 1.4em; }
+    }
+  </style>
   <script>
     // Global state variable to track if actions column is visible
     let actionsVisible = false;
     
-    // Function to toggle visibility of the Actions column in the Player Scoreboard
+    // Toggle Actions column
     function toggleActions() {
       actionsVisible = !actionsVisible;
-      // Toggle header cell
-      document.querySelectorAll('.actions-header').forEach(function(cell) {
+      document.querySelectorAll('.actions-header').forEach(cell => {
         cell.style.display = actionsVisible ? 'table-cell' : 'none';
       });
-      // Toggle each Actions cell in rows
-      document.querySelectorAll('.actions-column').forEach(function(cell) {
+      document.querySelectorAll('.actions-column').forEach(cell => {
         cell.style.display = actionsVisible ? 'table-cell' : 'none';
       });
     }
     
-    // Function to highlight the matching row in the Full  Scoreboard and scroll it into view
+    // Highlight in full scoreboard
     function highlightIn(golferName) {
       const clickedName = golferName.trim().toLowerCase();
-      const masterRows = document.querySelectorAll("#full-body tr");
-      
-      masterRows.forEach(function(row) {
-        row.classList.remove("highlight");
-      });
-      
-      masterRows.forEach(function(row) {
-        const cell = row.cells[0]; // Assume first cell holds the golfer's name
-        if (cell) {
-          const cellText = cell.innerText.trim().toLowerCase();
-          if (cellText === clickedName) {
-            row.classList.add("highlight");
-            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
+      const rows = document.querySelectorAll("#full-body tr");
+      rows.forEach(r => r.classList.remove("highlight"));
+      rows.forEach(r => {
+        const cell = r.cells[0];
+        if (cell && cell.innerText.trim().toLowerCase() === clickedName) {
+          r.classList.add("highlight");
+          r.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       });
     }
     
-    // Function to update the Player Scoreboard and attach click events to golfer links
+    // Fetch & render competition (player) scoreboard
     async function updateCompetition() {
       try {
-        const response = await fetch('/api/competition');
-        const data = await response.json();
-
-        // Helper function to check if a player's scores contain "CUT"
-        function hasCut(player) {
-          return Object.values(player.scores).some(score => score === "CUT");
-        }
-        
-        // Sort players: those with a "CUT" are placed at the bottom
-        data.sort(function(a, b) {
-          return (hasCut(a) === hasCut(b)) ? 0 : (hasCut(a) ? 1 : -1);
-        });
-
+        const res = await fetch('/api/competition');
+        const data = await res.json();
+        function hasCut(p) { return Object.values(p.scores).some(s=>s==="CUT"); }
+        data.sort((a,b)=>(hasCut(a)===hasCut(b)?0:hasCut(a)?1:-1));
         const tbody = document.getElementById("competition-body");
         tbody.innerHTML = "";
-        data.forEach(function(player) {
-          // If any golfer's score is "CUT", mark the row with the "cut" class
+        data.forEach(player => {
           const isCut = hasCut(player);
-          let row = `<tr${isCut ? ' class="cut"' : ''}>`;
-          row += `<td class="player-name">${player.competitor}`;
-          if (isCut) {
-            row += ' ☠';
-          }
-          row += `</td>`;
-          player.golfers.forEach(function(golfer) {
-            const score = player.scores[golfer] || "N/A";
-            row += `<td><a href="#" class="golfer-link" data-golfer="${golfer}">${golfer} (${score})</a></td>`;
+          let row = `<tr${isCut?' class="cut"':''}>`;
+          row += `<td class="player-name">${player.competitor}${isCut?' ☠':''}</td>`;
+          player.golfers.forEach(g=>{
+            const score = player.scores[g]||"N/A";
+            row += `<td><a href="#" class="golfer-link" data-golfer="${g}">${g} (${score})</a></td>`;
           });
-          row += "<td class='combined-score'>" + player.total + "</td>";
-          row += `<td class="actions-column" style="display: none;">
-                     <a href="/edit-competitor/${player.id}" class="action-link">Edit</a>
-                     <form action="/delete-competitor/${player.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
-                        <button type="submit">Delete</button>
-                     </form>
-                  </td>`;
-          row += "</tr>";
+          row += `<td class="combined-score">${player.total}</td>`;
+          row += `<td class="actions-column"><a href="/edit-competitor/${player.id}" class="action-link">Edit</a>
+                  <form action="/delete-competitor/${player.id}" method="POST" onsubmit="return confirm('Delete this player?');">
+                    <button type="submit">Delete</button>
+                  </form></td>`;
+          row += `</tr>`;
           tbody.innerHTML += row;
         });
-        // Attach click events to golfer links
-        document.querySelectorAll(".golfer-link").forEach(function(link) {
-          link.addEventListener("click", function(e) {
+        document.querySelectorAll(".golfer-link").forEach(link=>{
+          link.addEventListener("click", e=>{
             e.preventDefault();
-            const golferName = this.getAttribute("data-golfer");
-            highlightIn(golferName);
+            highlightIn(link.dataset.golfer);
           });
         });
-      } catch (error) {
-        console.error("Error fetching player data:", error);
+      } catch(err) {
+        console.error("Error fetching player data:", err);
       }
     }
-    
-    // Function to update the Full  Scoreboard
+
+    // Fetch & render full US Open scoreboard
     async function updateFull() {
       try {
-        const response = await fetch('/api/full');
-        const data = await response.json();
+        const res = await fetch('/api/full');
+        const data = await res.json();
         const tbody = document.getElementById("full-body");
         tbody.innerHTML = "";
-        data.forEach(function(entry) {
-          let row = "<tr><td>" + entry.golfer + "</td>" +
-                    "<td>" + entry.current_score + "</td>" +
-                    "<td>" + entry.today + "</td>" +
-                    "<td>" + entry.thru + "</td>" +
-                    "<td>" + entry.last_updated + "</td></tr>";
-          tbody.innerHTML += row;
+        data.forEach(entry => {
+          tbody.innerHTML += `<tr>
+            <td>${entry.golfer}</td>
+            <td>${entry.current_score}</td>
+            <td>${entry.today}</td>
+            <td>${entry.thru}</td>
+            <td>${entry.last_updated}</td>
+          </tr>`;
         });
-      } catch (error) {
-        console.error("Error fetching full scoreboard data:", error);
+      } catch(err) {
+        console.error("Error fetching full scoreboard data:", err);
       }
     }
-    
+
     function toggleAddPlayerForm() {
-      var formDiv = document.getElementById("addPlayerForm");
-      formDiv.style.display = (formDiv.style.display === "none" || formDiv.style.display === "") ? "block" : "none";
+      const f = document.getElementById("addPlayerForm");
+      f.style.display = (f.style.display === "block") ? "none" : "block";
     }
-    
-    document.addEventListener('DOMContentLoaded', function() {
+
+    document.addEventListener('DOMContentLoaded', ()=> {
       updateCompetition();
       updateFull();
       setInterval(updateCompetition, 10000);
@@ -339,12 +327,18 @@
   </script>
 </head>
 <body>
+  <!-- U.S. Open Logo -->
+  <div class="header-logo">
+    <img src="/static/usopen-logo.png" alt="U.S. Open Logo">
+  </div>
+
   <h1>Sweepstakes Scoreboard</h1>
   <div class="header-buttons">
     <button onclick="location.href='/refresh'">Refresh</button>
     <button onclick="toggleAddPlayerForm()">Add Player</button>
     <button onclick="toggleActions()">Edit Player</button>
   </div>
+
   <div id="addPlayerForm" style="display: none;">
     <h2>Add Player</h2>
     <form action="{{ url_for('add_competitor') }}" method="POST">
@@ -352,7 +346,6 @@
         Player Name:
         <input type="text" name="name" placeholder="Enter player name" required>
       </label>
-      <br>
       <label>
         Golfer 1:
         <select name="golfer1" required>
@@ -362,7 +355,6 @@
           {% endfor %}
         </select>
       </label>
-      <br>
       <label>
         Golfer 2:
         <select name="golfer2" required>
@@ -372,7 +364,6 @@
           {% endfor %}
         </select>
       </label>
-      <br>
       <label>
         Golfer 3:
         <select name="golfer3" required>
@@ -382,10 +373,10 @@
           {% endfor %}
         </select>
       </label>
-      <br>
       <button type="submit">Add Player</button>
     </form>
   </div>
+
   <div class="container">
     <div class="column player">
       <h2>Player Scoreboard</h2>
@@ -398,7 +389,7 @@
               <th>Golfer 2 (Score)</th>
               <th>Golfer 3 (Score)</th>
               <th>Total Score</th>
-              <th class="actions-header" style="display: none;">Actions</th>
+              <th class="actions-header">Actions</th>
             </tr>
           </thead>
           <tbody id="competition-body">
@@ -423,9 +414,9 @@
                   </a>
                 </td>
                 <td class="combined-score">{{ player.total }}</td>
-                <td class="actions-column" style="display: none;">
+                <td class="actions-column">
                   <a href="/edit-competitor/{{ player.id }}" class="action-link">Edit</a>
-                  <form action="{{ url_for('delete_competitor', competitor_id=player.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
+                  <form action="{{ url_for('delete_competitor', competitor_id=player.id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
                     <button type="submit">Delete</button>
                   </form>
                 </td>
@@ -435,6 +426,7 @@
         </table>
       </div>
     </div>
+
     <div class="column full">
       <h2>US OPEN Scoreboard</h2>
       <div class="table-wrapper">
